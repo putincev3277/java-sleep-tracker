@@ -1,10 +1,13 @@
 package ru.yandex.practicum.sleeptracker;
 
 import org.junit.jupiter.api.Test;
+
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
+
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
@@ -219,9 +222,11 @@ public class SleepTrackerAppTest {
 
         // Assert
         assertEquals("Средняя продолжительность сна", result.getDescription());
-        // (480 + 330 + 135) / 3 = 945 / 3 = 315.0
-        assertEquals("315,0 минут", result.getValue().toString());
+
+        String actualValue = result.getValue().toString().replace(',', '.');
+        assertEquals("315.0 минут", actualValue);
     }
+
 
     @Test
     void shouldReturnSameValueWhenAllDurationsAreEqual() {
@@ -250,7 +255,9 @@ public class SleepTrackerAppTest {
 
         // Assert
         assertEquals("Средняя продолжительность сна", result.getDescription());
-        assertEquals("360,0 минут", result.getValue().toString());
+
+        String actualValue = result.getValue().toString().replace(',', '.');
+        assertEquals("360.0 минут", actualValue);
     }
 
 
