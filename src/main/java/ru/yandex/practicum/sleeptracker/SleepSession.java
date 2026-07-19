@@ -27,8 +27,16 @@ public class SleepSession {
         this.quality = quality;
     }
 
-    public LocalDateTime getSleepStart() { return sleepStart; }
-    public LocalDateTime getSleepEnd()   { return sleepEnd; }
-    public SleepQuality getQuality()     { return quality; }
+    public LocalDateTime getSleepStart() {
+        return sleepStart;
+    }
+
+    public LocalDateTime getSleepEnd() {
+        return sleepEnd;
+    }
+
+    public SleepQuality getQuality() {
+        return quality;
+    }
 }
 
