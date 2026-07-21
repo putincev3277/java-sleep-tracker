@@ -12,6 +12,7 @@ public class MaxDurationFunction implements Function<List<SleepSession>, SleepAn
         }
 
         long maxMinutes = sessions.stream()
+                .filter(SleepSessionFilters::isComplete)
                 .mapToLong(s -> Duration.between(s.getSleepStart(), s.getSleepEnd()).toMinutes())
                 .max()
                 .orElse(0L);

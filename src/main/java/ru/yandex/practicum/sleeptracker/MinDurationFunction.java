@@ -12,6 +12,7 @@ public class MinDurationFunction implements Function<List<SleepSession>, SleepAn
         }
 
         long minMinutes = sessions.stream()
+                .filter(SleepSessionFilters::isComplete)
                 .mapToLong(s -> Duration.between(s.getSleepStart(), s.getSleepEnd()).toMinutes())
                 .min()
                 .orElse(0L);

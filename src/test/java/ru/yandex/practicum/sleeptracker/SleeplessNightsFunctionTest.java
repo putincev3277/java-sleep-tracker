@@ -1,6 +1,8 @@
 package ru.yandex.practicum.sleeptracker;
 
 import org.junit.jupiter.api.Test;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static java.time.LocalDateTime.of;
@@ -78,4 +80,25 @@ class SleeplessNightsFunctionTest {
                 new SleepSession(of(2024, 1, 2, 2, 0),    of(2024, 1, 2, 8, 0),   SleepQuality.NORMAL)
         );
     }
+    @Test
+    void shouldIgnoreIncompleteSessionsWhenDeterminingUserType() {
+        // Валидная ночная сессия (для совы)
+        var owlSession = new SleepSession(
+                LocalDateTime.of(2025, 10, 1, 23, 30),
+                LocalDateTime.of(2025, 10, 2, 9, 30),
+                SleepQuality.GOOD
+        );
+
+        // Битая сессия (null вместо времени)
+        var brokenSession = new SleepSession(null, null, SleepQuality.BAD);
+
+        var sessions = List.of(owlSession, brokenSession);
+        var result = new SleepTypeFunction().apply(sessions);
+
+        // Функция не должна упасть с NPE.
+        // Результат должен определяться только по owlSession.
+        assertEquals("Тип пользователя", result.getDescription());
+        assertEquals(UserSleepType.OWL.getDisplayName(), result.getValue());
+    }
+
 }
