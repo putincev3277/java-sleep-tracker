@@ -19,7 +19,15 @@ public class SleeplessNightsFunction implements Function<List<SleepSession>, Sle
             return new SleepAnalysisResult("Количество бессонных ночей", "0");
         }
 
-        var ordered = SleepSessionsOrdering.sortedByStart(sessions);
+        var completeSessions = sessions.stream()
+                .filter(SleepSessionFilters::isComplete)
+                .toList();
+
+        if (completeSessions.isEmpty()) {
+            return new SleepAnalysisResult("Количество бессонных ночей", "0");
+        }
+
+        var ordered = SleepSessionsOrdering.sortedByStart(completeSessions);
 
         LocalDate minStartDate = ordered.stream()
                 .map(s -> s.getSleepStart().toLocalDate())
@@ -31,8 +39,6 @@ public class SleeplessNightsFunction implements Function<List<SleepSession>, Sle
                 .max(LocalDate::compareTo)
                 .orElseThrow();
 
-        // Если в твоём проекте действительно есть метод getFirst() — оставь.
-        // В стандартном List его нет, поэтому безопаснее использовать get(0).
         LocalDateTime firstSessionStart = ordered.getFirst().getSleepStart();
 
         LocalDate startNightDate;
@@ -59,6 +65,7 @@ public class SleeplessNightsFunction implements Function<List<SleepSession>, Sle
         LocalDateTime nightEnd = date.atTime(NIGHT_END_HOUR, 0);
 
         boolean hasAnySessionCrossingNight = sessions.stream()
+                .filter(SleepSessionFilters::isComplete)
                 .anyMatch(session -> isOverlap(session, nightStart, nightEnd));
 
         return !hasAnySessionCrossingNight;

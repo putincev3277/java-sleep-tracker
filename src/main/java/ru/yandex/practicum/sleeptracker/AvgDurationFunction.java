@@ -12,6 +12,7 @@ public class AvgDurationFunction implements Function<List<SleepSession>, SleepAn
         }
 
         double avgMinutes = sessions.stream()
+                .filter(SleepSessionFilters::isComplete)
                 .mapToLong(s -> Duration.between(s.getSleepStart(), s.getSleepEnd()).toMinutes())
                 .average()
                 .orElse(0.0);

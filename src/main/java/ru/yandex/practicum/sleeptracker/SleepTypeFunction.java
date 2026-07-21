@@ -18,6 +18,7 @@ public class SleepTypeFunction implements Function<List<SleepSession>, SleepAnal
         }
 
         Map<UserSleepType, Integer> counts = sessions.stream()
+                .filter(SleepSessionFilters::isComplete)
                 .filter(this::isNightSession)      // <-- Теперь фильтр работает корректно
                 .map(this::determineNightType)
                 .collect(groupingBy(Function.identity(), summingInt(x -> 1)));
